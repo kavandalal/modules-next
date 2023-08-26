@@ -81,15 +81,15 @@ export default function CropDialog({
 		}
 	}, [openModal, previousImgSrc, prevName, propAspect]);
 
-	useEffect(() => {
-		if (customOpen || customOpen === false) {
-			if (customOpen) {
-				handleOpenModal();
-			} else {
-				onCloseHere();
-			}
-		}
-	}, [customOpen, onCloseHere]);
+	// useEffect(() => {
+	// 	if (customOpen || customOpen === false) {
+	// 		if (customOpen) {
+	// 			handleOpenModal();
+	// 		} else {
+	// 			onCloseHere();
+	// 		}
+	// 	}
+	// }, [customOpen, onCloseHere]);
 
 	useEffect(() => {
 		if (autoOpen) {
@@ -163,7 +163,7 @@ export default function CropDialog({
 		[]
 	);
 
-	async function onSelectFile(e : any) {
+	async function onSelectFile(e: any) {
 		try {
 			if (e.target && e.target.files && e.target.files.length > 0) {
 				const file = e.target.files[0];
@@ -179,98 +179,98 @@ export default function CropDialog({
 		}
 	}
 
-	function onImageLoad(e: React.ChangeEvent<HTMLImageElement>) {
-		if (e.currentTarget && imgRef) {
-			const { width, height } = e.currentTarget;
-			setCrop(
-				centerAspectCrop({
-					mediaWidth: width,
-					mediaHeight: height,
-					aspect,
-				})
-			);
-			canvasPreview( { 
-        
-        image : imgRef.current,
-	canvas : previewCanvasRef.current,
-	crop : completedCrop
-        
-scale, rotate  });
-		}
-	}
+	// 	function onImageLoad(e: React.ChangeEvent<HTMLImageElement>) {
+	// 		if (e.currentTarget && imgRef) {
+	// 			const { width, height } = e.currentTarget;
+	// 			setCrop(
+	// 				centerAspectCrop({
+	// 					mediaWidth: width,
+	// 					mediaHeight: height,
+	// 					aspect,
+	// 				})
+	// 			);
+	// 			canvasPreview( {
 
-	function onCloseHere() {
-		setImgSrc('');
-		setCompletedCrop(false);
-		setOpenModal(false);
-		onClose();
-	}
+	//         image : imgRef.current,
+	// 	canvas : previewCanvasRef.current,
+	// 	crop : completedCrop
 
-	async function onSubmitHere() {
-		if (!previewCanvasRef?.current || !previewCanvasRef?.current?.toDataURL()) {
-			toast({ variant: 'destructive', title: `Please Update/Crop Image` });
+	// scale, rotate  });
+	// 		}
+	// 	}
 
-			return false;
-		}
-		if (previewCanvasRef?.current && previewCanvasRef?.current?.toDataURL()) {
-			const blobData = await getblob(previewCanvasRef);
+	// 	function onCloseHere() {
+	// 		setImgSrc('');
+	// 		setCompletedCrop(false);
+	// 		setOpenModal(false);
+	// 		onClose();
+	// 	}
 
-			const toastID = toast.loading('Processing...');
-			// console.log('Before Compression', e.target.files[0]?.size);
-			const options = { maxSizeMB: propSize };
-			const compressedBlob = await imageCompression(blobData, options);
-			// console.log('After Compression', compressedFile);
-			customToast({ updateId: toastID, type: 'update', msg: 'Image Processed', updateType: 'success' });
+	// 	async function onSubmitHere() {
+	// 		if (!previewCanvasRef?.current || !previewCanvasRef?.current?.toDataURL()) {
+	// 			toast({ variant: 'destructive', title: `Please Update/Crop Image` });
 
-			onClose(compressedBlob, nameHere);
-			// onClose(previewCanvasRef?.current?.toDataURL());
-		} else {
-			onClose();
-		}
-		setImgSrc('');
-		setCompletedCrop(false);
-		setOpenModal(false);
-		return true;
-	}
+	// 			return false;
+	// 		}
+	// 		if (previewCanvasRef?.current && previewCanvasRef?.current?.toDataURL()) {
+	// 			const blobData = await getblob(previewCanvasRef);
 
-	const getblob = (previewCanvasRef) =>
-		new Promise((resolve, reject) => {
-			const canvas = previewCanvasRef?.current;
-			const ctx = canvas.getContext('2d');
+	// 			const toastID = toast.loading('Processing...');
+	// 			// console.log('Before Compression', e.target.files[0]?.size);
+	// 			const options = { maxSizeMB: propSize };
+	// 			const compressedBlob = await imageCompression(blobData, options);
+	// 			// console.log('After Compression', compressedFile);
+	// 			customToast({ updateId: toastID, type: 'update', msg: 'Image Processed', updateType: 'success' });
 
-			const img = new Image();
-			img.onload = () => {
-				canvas.width = img.width;
-				canvas.height = img.height;
-				ctx.drawImage(img, 0, 0);
+	// 			onClose(compressedBlob, nameHere);
+	// 			// onClose(previewCanvasRef?.current?.toDataURL());
+	// 		} else {
+	// 			onClose();
+	// 		}
+	// 		setImgSrc('');
+	// 		setCompletedCrop(false);
+	// 		setOpenModal(false);
+	// 		return true;
+	// 	}
 
-				// Get the Blob
-				canvas.toBlob((blob) => {
-					// You can use the retrieved blob here
-					if (blob) {
-						resolve(blob);
-					}
-				});
-			};
-			img.src = previewCanvasRef?.current.toDataURL();
-		});
+	// 	const getblob = (previewCanvasRef) =>
+	// 		new Promise((resolve, reject) => {
+	// 			const canvas = previewCanvasRef?.current;
+	// 			const ctx = canvas.getContext('2d');
 
-	useDebounceEffect(
-		async () => {
-			if (completedCrop?.width && completedCrop?.height && imgRef.current && previewCanvasRef.current) {
-				canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop, scale, rotate);
-			}
-		},
-		100,
-		[completedCrop, scale, rotate]
-	);
+	// 			const img = new Image();
+	// 			img.onload = () => {
+	// 				canvas.width = img.width;
+	// 				canvas.height = img.height;
+	// 				ctx.drawImage(img, 0, 0);
 
-	const clickChangePhoto = () => {
-		const isThere = changePhotoRef?.current;
-		if (isThere) {
-			isThere.click();
-		}
-	};
+	// 				// Get the Blob
+	// 				canvas.toBlob((blob) => {
+	// 					// You can use the retrieved blob here
+	// 					if (blob) {
+	// 						resolve(blob);
+	// 					}
+	// 				});
+	// 			};
+	// 			img.src = previewCanvasRef?.current.toDataURL();
+	// 		});
+
+	// 	useDebounceEffect(
+	// 		async () => {
+	// 			if (completedCrop?.width && completedCrop?.height && imgRef.current && previewCanvasRef.current) {
+	// 				canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop, scale, rotate);
+	// 			}
+	// 		},
+	// 		100,
+	// 		[completedCrop, scale, rotate]
+	// 	);
+
+	// 	const clickChangePhoto = () => {
+	// 		const isThere = changePhotoRef?.current;
+	// 		if (isThere) {
+	// 			isThere.click();
+	// 		}
+	// 	};
 
 	return <div>crop-dialog</div>;
 }
