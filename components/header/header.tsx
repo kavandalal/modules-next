@@ -5,6 +5,7 @@ import { ToggleButton } from '@/components/ui/toggle-theme';
 import { Button } from '../ui/button';
 import { AlignJustify, User2 } from 'lucide-react';
 import Links from './links';
+import HoverKavan from './hover-kavan';
 
 export default function Header() {
 	const [openNav, setOpenNav] = useState(false);
@@ -25,7 +26,7 @@ export default function Header() {
 			className='py-3 justify-between w-full flex items-center sticky top-0 bg-[hsl(var(--background))] z-10'
 			style={{ boxShadow: '0 -10px 16px hsl(var(--foreground))' }}>
 			<div className='container justify-between w-full flex items-center'>
-				<div className='font-bold'>Kavan Dalal</div>
+				<HoverKavan />
 				<div className='hidden md:block'>
 					<Links open={openNav} onOpenChange={toggleNav} onClose={closeNav} />
 				</div>
