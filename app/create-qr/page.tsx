@@ -41,7 +41,9 @@ export default function CreateQR() {
 		size: 250,
 		bgColor: '#ffffff',
 		fgColor: '#000000',
-		logoImage: 'https://static-00.iconduck.com/assets.00/nextjs-icon-1024x1024-0nli97e5.png',
+		logoImage:
+			// 'https://w7.pngwing.com/pngs/664/593/png-transparent-artstation-logo-logos-logos-and-brands-icon.png',
+			'https://static-00.iconduck.com/assets.00/nextjs-icon-1024x1024-0nli97e5.png',
 		logoOpacity: 1,
 		logoWidth: 50,
 		logoPadding: 2,
@@ -74,7 +76,6 @@ export default function CreateQR() {
 
 	const handleChange = (e: any) => {
 		const { name, value } = e.target;
-		console.log(name, '---', value);
 		setState((prev) => ({
 			...prev,
 			[name]: value,
@@ -88,7 +89,8 @@ export default function CreateQR() {
 			description: (
 				<ul>
 					<li>Try reducing the size of Logo</li>
-					<li>Try Increasing the size of Complexity </li>
+					<li>Try Increasing the size of Complexity</li>
+					<li>Try changing the background color to a lighter color </li>
 				</ul>
 			),
 		});
@@ -138,10 +140,10 @@ export default function CreateQR() {
 	);
 
 	return (
-		<section className=' container justify-center items-center flex-row gap-3'>
+		<section className=' md:container justify-center items-center flex-row gap-3'>
 			<div className='text-4xl font-bold text-center my-5 text-[hsl(var(--primary))]'>Create QR Code</div>
 			<div
-				className=' grid grid-flow-row md:grid-flow-col grid-cols-1 md:grid-cols-[2fr_1fr]'
+				className=' grid grid-flow-row md:grid-flow-col grid-cols-1 md:grid-cols-[2fr_1fr] mb-4'
 				// style={{ gridTemplateColumns: '2fr 1fr' }}
 			>
 				<div className='grid grid-flow-row gap-4 px-8'>

@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 
 type TypeuseDebounceEffect = {
-	fn: () => {};
+	fn: (...args: any[]) => void;
 	waitTime: number;
-	deps: [];
+	deps: any[];
 };
 
 export function useDebounceEffect({ fn, waitTime, deps }: TypeuseDebounceEffect) {

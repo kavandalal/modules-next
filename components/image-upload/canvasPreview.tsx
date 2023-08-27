@@ -1,14 +1,7 @@
 import { PixelCrop } from 'react-image-crop';
+import { CanvasProp } from './types.image';
 
 const TO_RADIANS = Math.PI / 180;
-
-type CanvasProp = {
-	image: HTMLImageElement;
-	canvas: HTMLCanvasElement | null;
-	crop: PixelCrop;
-	scale?: number;
-	rotate?: number;
-};
 
 export async function canvasPreview({
 	image,
@@ -17,6 +10,10 @@ export async function canvasPreview({
 	scale = 1,
 	rotate = 0,
 }: CanvasProp): Promise<boolean | Error> {
+	if (!canvas || !image) {
+		return false;
+	}
+
 	const ctx = canvas?.getContext('2d') || null;
 
 	if (!canvas) return new Error('Canvas not found');

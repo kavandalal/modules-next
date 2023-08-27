@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop } from 'react-image-crop';
+import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop, PercentCrop } from 'react-image-crop';
 import imageCompression from 'browser-image-compression';
 import 'react-image-crop/dist/ReactCrop.css';
 
@@ -9,13 +9,24 @@ import { canvasPreview } from './canvasPreview';
 import { useDebounceEffect } from '../../hooks/useDebounceEffect';
 import { blobToPreview } from '@/helper/blobToPreview';
 import { toast } from '../ui/use-toast';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '../ui/dialog';
+import { Button } from '../ui/button';
+import { RefreshCcw, RotateCcw, RotateCw } from 'lucide-react';
+import { Input } from '../ui/input';
+import ImageNext from 'next/image';
+import { TCropDialog, TcenterAspectCrop } from './types.image';
+import { Slider } from '../ui/slider';
 
-type TcenterAspectCrop = {
-	mediaWidth: number;
-	mediaHeight: number;
-	aspect: number;
-};
-function centerAspectCrop({ mediaWidth, mediaHeight, aspect }: TcenterAspectCrop) {
+function centerAspectCrop({ mediaWidth, mediaHeight, aspect }: TcenterAspectCrop): PercentCrop {
+	// console.log('running centerAspectCrop');
 	return centerCrop(
 		makeAspectCrop(
 			{
@@ -31,15 +42,9 @@ function centerAspectCrop({ mediaWidth, mediaHeight, aspect }: TcenterAspectCrop
 	);
 }
 
-type TCropDialog = {
-	propAspect: number;
-	propSize: number;
-	onClose: () => {};
-	previousImgSrc: Blob;
-	prevName: string;
-	autoOpen: boolean;
-	customClass: string;
-	customOpen: boolean;
+const imageHandW = {
+	width: '30vh',
+	//  height: '30vh'
 };
 
 export default function CropDialog({
@@ -52,15 +57,15 @@ export default function CropDialog({
 	customClass,
 	customOpen,
 }: TCropDialog) {
-	const [imgSrc, setImgSrc] = useState<Blob | string>();
+	const [imgSrc, setImgSrc] = useState<string | Blob>();
 	const [nameHere, setNameHere] = useState('');
-	const previewCanvasRef = useRef(null);
-	const imgRef = useRef(null);
-	const changePhotoRef = useRef(null);
+	const previewCanvasRef: React.RefObject<HTMLCanvasElement> = useRef(null);
+	const imgRef: React.RefObject<HTMLImageElement> = useRef(null);
+	const changePhotoRef: React.RefObject<HTMLInputElement> = useRef(null);
 
-	const [crop, setCrop] = useState();
-	const [completedCrop, setCompletedCrop] = useState(false);
-	const [scale] = useState(1);
+	const [crop, setCrop] = useState<PercentCrop | undefined>();
+	const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
+	const [scale, setScale] = useState(1);
 	const [rotate, setRotate] = useState(0);
 	const [aspect, setAspect] = useState(0);
 	const [openModal, setOpenModal] = useState(false);
@@ -81,23 +86,31 @@ export default function CropDialog({
 		}
 	}, [openModal, previousImgSrc, prevName, propAspect]);
 
-	// useEffect(() => {
-	// 	if (customOpen || customOpen === false) {
-	// 		if (customOpen) {
-	// 			handleOpenModal();
-	// 		} else {
-	// 			onCloseHere();
-	// 		}
-	// 	}
-	// }, [customOpen, onCloseHere]);
-
 	useEffect(() => {
 		if (autoOpen) {
 			handleOpenModal();
 		}
 	}, [autoOpen]);
 
-	const openAgain = async (previousImgSrc: Blob) => {
+	const onCloseHere = useCallback(() => {
+		setImgSrc(undefined);
+		setCompletedCrop(undefined);
+		setOpenModal(false);
+		onClose();
+	}, [onClose]);
+
+	useEffect(() => {
+		if (customOpen || customOpen === false) {
+			if (customOpen) {
+				handleOpenModal();
+			} else {
+				onCloseHere();
+			}
+		}
+	}, [customOpen, onCloseHere]);
+
+	const openAgain = async (previousImgSrc: Blob | string) => {
+		if (!(previousImgSrc instanceof Blob)) return;
 		setCrop(undefined); // Makes crop preview update between images.
 
 		const base64 = await blobToPreview(previousImgSrc);
@@ -170,7 +183,7 @@ export default function CropDialog({
 				const [blob, base64] = await Promise.all([readBlob(file), readBase64(file)]);
 				setCrop(undefined); // Makes crop preview update between images.
 
-				setImgSrc(base64 || '');
+				setImgSrc(base64 || undefined);
 			}
 			return true;
 		} catch (err: any) {
@@ -179,98 +192,284 @@ export default function CropDialog({
 		}
 	}
 
-	// 	function onImageLoad(e: React.ChangeEvent<HTMLImageElement>) {
-	// 		if (e.currentTarget && imgRef) {
-	// 			const { width, height } = e.currentTarget;
-	// 			setCrop(
-	// 				centerAspectCrop({
-	// 					mediaWidth: width,
-	// 					mediaHeight: height,
-	// 					aspect,
-	// 				})
-	// 			);
-	// 			canvasPreview( {
+	const onImageLoad = useCallback(
+		(e: React.ChangeEvent<HTMLImageElement>) => {
+			if (e.currentTarget && imgRef) {
+				const { width, height } = e.currentTarget;
+				if (width && height) {
+					setCrop(
+						centerAspectCrop({
+							mediaWidth: width,
+							mediaHeight: height,
+							aspect,
+						})
+					);
+				}
+				if (!imgRef || !imgRef.current || !previewCanvasRef.current || !completedCrop) {
+					return false;
+				}
+				canvasPreview({
+					image: imgRef.current,
+					canvas: previewCanvasRef.current,
+					crop: completedCrop,
+					scale,
+					rotate,
+				});
+			}
+		},
+		[completedCrop, scale, rotate, aspect]
+	);
 
-	//         image : imgRef.current,
-	// 	canvas : previewCanvasRef.current,
-	// 	crop : completedCrop
+	async function onSubmitHere() {
+		if (!previewCanvasRef) {
+			return false;
+		}
+		if (!previewCanvasRef?.current) {
+			toast({ variant: 'destructive', title: `Please Update/Crop Image` });
+			return false;
+		}
 
-	// scale, rotate  });
-	// 		}
-	// 	}
+		if (!previewCanvasRef?.current?.toDataURL()) {
+			toast({ variant: 'destructive', title: `Please Update/Crop Image` });
+			return false;
+		}
+		if (previewCanvasRef?.current && previewCanvasRef?.current?.toDataURL()) {
+			const blobData: Blob = await getblob(previewCanvasRef);
 
-	// 	function onCloseHere() {
-	// 		setImgSrc('');
-	// 		setCompletedCrop(false);
-	// 		setOpenModal(false);
-	// 		onClose();
-	// 	}
+			// const toastID = toast.loading('Processing...');
+			// console.log('Before Compression', e.target.files[0]?.size);
+			const options = { maxSizeMB: propSize };
+			const toOptimiseFile = blobToFile(blobData, '');
+			const compressedBlob = await imageCompression(toOptimiseFile, options);
+			// console.log('After Compression', compressedFile);
+			// customToast({ updateId: toastID, type: 'update', msg: 'Image Processed', updateType: 'success' });
 
-	// 	async function onSubmitHere() {
-	// 		if (!previewCanvasRef?.current || !previewCanvasRef?.current?.toDataURL()) {
-	// 			toast({ variant: 'destructive', title: `Please Update/Crop Image` });
+			onClose(compressedBlob, nameHere);
+		} else {
+			onClose();
+		}
+		setImgSrc(undefined);
+		setCompletedCrop(undefined);
+		setOpenModal(false);
+		return true;
+	}
 
-	// 			return false;
-	// 		}
-	// 		if (previewCanvasRef?.current && previewCanvasRef?.current?.toDataURL()) {
-	// 			const blobData = await getblob(previewCanvasRef);
+	function blobToFile(blob: Blob, fileName: string): File {
+		// Create a new File instance using the Blob data and a specified filename
+		return new File([blob], fileName, { type: blob.type });
+	}
 
-	// 			const toastID = toast.loading('Processing...');
-	// 			// console.log('Before Compression', e.target.files[0]?.size);
-	// 			const options = { maxSizeMB: propSize };
-	// 			const compressedBlob = await imageCompression(blobData, options);
-	// 			// console.log('After Compression', compressedFile);
-	// 			customToast({ updateId: toastID, type: 'update', msg: 'Image Processed', updateType: 'success' });
+	const getblob = (previewCanvasRef: React.RefObject<HTMLCanvasElement>): Promise<Blob> =>
+		new Promise<Blob>((resolve, reject) => {
+			const canvas = previewCanvasRef?.current;
+			if (!canvas) {
+				reject(new Error(`Canvas not found`));
+				return;
+			}
 
-	// 			onClose(compressedBlob, nameHere);
-	// 			// onClose(previewCanvasRef?.current?.toDataURL());
-	// 		} else {
-	// 			onClose();
-	// 		}
-	// 		setImgSrc('');
-	// 		setCompletedCrop(false);
-	// 		setOpenModal(false);
-	// 		return true;
-	// 	}
+			const ctx = canvas.getContext('2d');
+			if (!ctx) {
+				reject(new Error(`ctx not found`));
+				return;
+			}
 
-	// 	const getblob = (previewCanvasRef) =>
-	// 		new Promise((resolve, reject) => {
-	// 			const canvas = previewCanvasRef?.current;
-	// 			const ctx = canvas.getContext('2d');
+			const img: HTMLImageElement = new Image();
+			img.src = previewCanvasRef?.current.toDataURL();
+			img.onload = () => {
+				canvas.width = img.width;
+				canvas.height = img.height;
+				ctx.drawImage(img, 0, 0);
 
-	// 			const img = new Image();
-	// 			img.onload = () => {
-	// 				canvas.width = img.width;
-	// 				canvas.height = img.height;
-	// 				ctx.drawImage(img, 0, 0);
+				// Get the Blob
+				canvas.toBlob((blob: Blob | null) => {
+					// You can use the retrieved blob here
+					if (blob) {
+						resolve(blob);
+					} else {
+						reject(new Error(`Blob is null`));
+					}
+				});
+			};
+		});
 
-	// 				// Get the Blob
-	// 				canvas.toBlob((blob) => {
-	// 					// You can use the retrieved blob here
-	// 					if (blob) {
-	// 						resolve(blob);
-	// 					}
-	// 				});
-	// 			};
-	// 			img.src = previewCanvasRef?.current.toDataURL();
-	// 		});
+	useDebounceEffect({
+		fn: async () => {
+			if (completedCrop?.width && completedCrop?.height && imgRef.current && previewCanvasRef.current) {
+				canvasPreview({ image: imgRef.current, canvas: previewCanvasRef.current, crop: completedCrop, scale, rotate });
+			}
+		},
+		waitTime: 100,
+		deps: [completedCrop, scale, rotate],
+	});
 
-	// 	useDebounceEffect(
-	// 		async () => {
-	// 			if (completedCrop?.width && completedCrop?.height && imgRef.current && previewCanvasRef.current) {
-	// 				canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop, scale, rotate);
-	// 			}
-	// 		},
-	// 		100,
-	// 		[completedCrop, scale, rotate]
-	// 	);
+	const clickChangePhoto = () => {
+		if (!changePhotoRef) return;
+		const isThere = changePhotoRef?.current;
+		if (!isThere) {
+			return;
+		}
+		isThere.click();
+	};
 
-	// 	const clickChangePhoto = () => {
-	// 		const isThere = changePhotoRef?.current;
-	// 		if (isThere) {
-	// 			isThere.click();
-	// 		}
-	// 	};
+	const ConditionalRender = useCallback(() => {
+		if (imgSrc && imgSrc instanceof Blob) return;
+		const newImgSrc = imgSrc;
+		if (!newImgSrc) return;
+		return (
+			<img
+				crossOrigin='anonymous'
+				ref={imgRef}
+				alt='Crop me'
+				src={newImgSrc}
+				// width={400}
+				// // sizes='100vw'
+				// height={400}
+				style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
+				onLoad={onImageLoad}
+			/>
+		);
+	}, [imgSrc, imgRef, scale, rotate]);
 
-	return <div>crop-dialog</div>;
+	return (
+		<>
+			{/* <Button type={'button'} onClick={handleOpenModal}>
+				Select
+			</Button> */}
+
+			<Dialog open={openModal} onOpenChange={onCloseHere}>
+				{/* <DialogTrigger /> */}
+				{/* Open</DialogTrigger> */}
+				<DialogContent className='md:max-w-[800px]'>
+					<DialogHeader>
+						<DialogTitle className='mb-4'>Crop Image</DialogTitle>
+						<DialogDescription>
+							<div className='gap-4 overflow-hidden grid grid-cols-2 '>
+								{!!imgSrc && (
+									<div className='mx-auto '>
+										<div>Your Image</div>
+										<ReactCrop
+											crop={crop}
+											onChange={(_, percentCrop) => setCrop(percentCrop)}
+											onComplete={(c) => {
+												setCompletedCrop(c);
+											}}
+											aspect={aspect}
+											style={{ ...imageHandW }}>
+											<ConditionalRender />
+										</ReactCrop>
+									</div>
+								)}
+								<div className='mx-auto hidden sm:block '>
+									<div>Output Image</div>
+									<div className='h-full my-auto flex items-center'>
+										<div style={{ ...imageHandW }}>
+											{!!completedCrop && (
+												<canvas
+													ref={previewCanvasRef}
+													style={{
+														border: '1px solid black',
+														objectFit: 'contain',
+														width: '100%',
+														height: '100%',
+													}}
+												/>
+											)}
+										</div>
+									</div>
+								</div>
+								<div className=''>
+									<div className='text-center mb-3'>Rotate</div>
+									<div className=' flex justify-center'>
+										<Button
+											variant='secondary'
+											type='button'
+											className='px-3 me-2 rounded-pill'
+											onClick={(e) => setRotate(Number(rotate + 90))}>
+											<RotateCw />
+										</Button>
+										<Button
+											variant='secondary'
+											type='button'
+											onClick={(e) => setRotate(Number(rotate - 90))}
+											className='px-3 rounded-pill'>
+											<RotateCcw />
+										</Button>
+									</div>
+								</div>
+								<div>
+									<div className='text-center mb-3'>Zoom</div>
+									<div className=' flex justify-center'>
+										<Slider
+											defaultValue={[100]}
+											onValueChange={(e: number[]) => {
+												setCrop((prev) => {
+													if (!prev) return {} as PercentCrop;
+													const newWidth = Number(e[0]);
+													const newHeight = newWidth / propAspect;
+													const newReturn = {
+														...prev,
+														width: newWidth,
+														height: newHeight,
+													};
+
+													// setCompletedCrop((prev2) => {
+													// 	if (!prev2) return {} as PixelCrop;
+													// 	console.log('************', prev2.width, prev2.height, prev2);
+													// 	const newCompletedW = prev2.width * (newWidth / 100);
+													// 	const newCompletedH = newCompletedW / propAspect;
+													// 	console.log('------', newCompletedW, newCompletedH, prev2);
+													// 	return {
+													// 		...prev2,
+													// 		width: newCompletedW,
+													// 		height: newCompletedH,
+													// 	};
+													// });
+
+													return newReturn;
+												});
+											}}
+											name='logoWidth'
+											id='logoWidth'
+											max={100}
+											min={1}
+											step={1}
+										/>
+									</div>
+								</div>
+							</div>
+							<div>
+								<Input
+									type='file'
+									className='hidden'
+									ref={changePhotoRef}
+									onChange={(e) => onSelectFile(e)}
+									accept={'image/*'}
+								/>
+							</div>
+						</DialogDescription>
+					</DialogHeader>
+					<DialogFooter>
+						<div className='flex justify-end items-center w-100'>
+							<Button
+								type='button'
+								onClick={() => clickChangePhoto()}
+								// disabled={isLoading}
+								variant='outline'
+								className='rounded-pill px-3 px-md-4 me-3 w-[200px]'>
+								<RefreshCcw size={16} className='me-2' /> Change Photo
+							</Button>
+							<Button
+								type='button'
+								// disabled={isLoading}
+								onClick={() => onSubmitHere()}
+								variant='default'
+								className='rounded-pill px-3 px-md-4 w-100 w-[130px]'>
+								Apply
+							</Button>
+						</div>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</>
+	);
 }
