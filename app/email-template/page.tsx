@@ -21,6 +21,8 @@ export default function Page() {
 			const { design, html } = data;
 
 			try {
+				console.log('%c Copy function Running', 'color: yellow; background:#cccccc;');
+				console.log(html);
 				navigator.clipboard.writeText(html);
 				toast({
 					variant: 'success',
