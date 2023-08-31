@@ -89,6 +89,9 @@ dependencies:
   react-dropzone:
     specifier: ^14.2.3
     version: 14.2.3(react@18.2.0)
+  react-email-editor:
+    specifier: ^1.7.9
+    version: 1.7.9(react@18.2.0)
   react-image-crop:
     specifier: ^10.1.5
     version: 10.1.5(react@18.2.0)
@@ -2974,6 +2977,16 @@ packages:
       react: 18.2.0
     dev: false
 
+  /react-email-editor@1.7.9(react@18.2.0):
+    resolution: {integrity: sha512-ALsGS1E/oAzgWDDbFFxJ8Y8QCx7ZJK46aEi/w7Ydgs62+83sQjwr0pTzyTapWZnACWTv3wCLDDFqateui1YYJQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=15'
+    dependencies:
+      react: 18.2.0
+      unlayer-types: 1.5.23
+    dev: false
+
   /react-image-crop@10.1.5(react@18.2.0):
     resolution: {integrity: sha512-BL8Rd/UHCE4O5GcYQiWDKVh5JOJb0Ic/Gde2W171v5nY7RyQzFLM1cxIzlYfESLO/lNgBVhDHuEV9RHnqALMkA==}
     peerDependencies:
@@ -3472,6 +3485,10 @@ packages:
       has-bigints: 1.0.2
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
+    dev: false
+
+  /unlayer-types@1.5.23:
+    resolution: {integrity: sha512-Gpj/kYGvm0HpGYvX4nAFtd/p5K9LYKfMFuNNeqhabHIfibJNYJnjsWY07MEgfQt6XcoEMMG1mnQXDsHJNwre3g==}
     dev: false
 
   /update-browserslist-db@1.0.11(browserslist@4.21.10):

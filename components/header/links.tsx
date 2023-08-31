@@ -39,6 +39,12 @@ export default function Links({
 			url: '/image-upload',
 			title: 'Image Upload',
 		},
+
+		{
+			slug: 'email-template',
+			url: '/email-template',
+			title: 'Email Template',
+		},
 	];
 	const [openNav, setOpenNav] = useState(false);
 
