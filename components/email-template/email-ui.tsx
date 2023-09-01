@@ -13,7 +13,7 @@ const DynamicEmailEditor = dynamic(
 	{ ssr: false }
 );
 
-const ForwardedEmailEditor = React.forwardRef<EditorRef, EmailEditorProps>((props, ref) => {
+const ForwardedEmailEditor = React.forwardRef<EditorRef, EmailEditorProps>(function x(props, ref) {
 	return <DynamicEmailEditor {...props} ref={ref} />;
 });
 
