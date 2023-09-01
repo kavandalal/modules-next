@@ -60,6 +60,10 @@ const MergeImage = forwardRef<HTMLCanvasElement | null, TMergeImageProps>(functi
 			const bannerData = bannersrc;
 
 			// const refCanvas = externalRef;
+
+			if (!externalRef) return false;
+			if (!('current' in externalRef)) return false;
+
 			const refCanvas = externalRef.current;
 			if (!refCanvas) return false;
 
