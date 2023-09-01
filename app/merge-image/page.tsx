@@ -10,19 +10,6 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-export const canvasToImg = async (canvasRef: React.RefObject<HTMLCanvasElement | null>) => {
-	try {
-		if (!canvasRef) return false;
-		const canvas = canvasRef.current;
-		// const ctx = canvas.getContext('2d');
-		if (!canvas) return false;
-		const imageData = canvas.toDataURL('image/png'); // Change the format as needed (e.g., 'image/jpeg')
-		return imageData;
-	} catch (err) {
-		console.log(err);
-		return false;
-	}
-};
 type TuserData = {
 	logo: string;
 	banner: string;
@@ -51,6 +38,20 @@ export default function MergeImageTest() {
 	useEffect(() => {
 		console.log('customCanvasRef chnaged ', customCanvasRef.current);
 	}, [customCanvasRef]);
+
+	const canvasToImg = async (canvasRef: React.RefObject<HTMLCanvasElement | null>) => {
+		try {
+			if (!canvasRef) return false;
+			const canvas = canvasRef.current;
+			// const ctx = canvas.getContext('2d');
+			if (!canvas) return false;
+			const imageData = canvas.toDataURL('image/png'); // Change the format as needed (e.g., 'image/jpeg')
+			return imageData;
+		} catch (err) {
+			console.log(err);
+			return false;
+		}
+	};
 
 	const getBase64 = async () => {
 		const base64img = await canvasToImg(customCanvasRef);
@@ -104,7 +105,7 @@ export default function MergeImageTest() {
 		}));
 	};
 
-	const handleAspectChange = useCallback((e: any) => {
+	const handleAspectChange = (e: any) => {
 		console.log(e, typeof e, Number(e));
 		setUserData((prev) => {
 			const bannerWidth = prev?.bannerWidth;
@@ -112,7 +113,7 @@ export default function MergeImageTest() {
 
 			return { ...prev, aspectRatio: e, bannerWidth, bannerHeight };
 		});
-	}, []);
+	};
 
 	// const displayWidth = 700;
 	// const displayRatio = 16 / 9;
