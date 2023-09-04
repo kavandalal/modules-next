@@ -39,11 +39,11 @@ export default function Links({
 			url: '/image-upload',
 			title: 'Image Upload',
 		},
-		// {
-		// 	slug: 'email-template',
-		// 	url: '/email-template',
-		// 	title: 'Email Template',
-		// },
+		{
+			slug: 'email-template',
+			url: '/email-template',
+			title: 'Email Template',
+		},
 		{
 			slug: 'merge-image',
 			url: '/merge-image',
