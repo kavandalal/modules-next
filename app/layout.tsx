@@ -12,7 +12,7 @@ export const metadata = {
 		default: 'Modules by Kavan Dalal',
 		template: '%s | Module by Kavan Dalal',
 	},
-	description: 'Website made Kavan Dalal (https://www.linkedin.com/in/kavan-dalal/)(https://github.com/kavandalal)',
+	description: 'Website made by Kavan Dalal',
 	keywords: ['Kavan Dalal', 'kavan dalal', 'india', 'next.js', 'typescript'],
 	openGraph: {
 		url: 'https://www.linkedin.com/in/kavan-dalal/',
