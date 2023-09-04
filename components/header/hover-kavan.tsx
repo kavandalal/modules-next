@@ -16,11 +16,13 @@ const links = {
 };
 export default function HoverKavan() {
 	const [data, setData] = useState({ company: '', location: '', avatar_url: '', bio: '' });
+
 	const getGithubData = async () => {
 		const data = await fetch('https://api.github.com/users/kavandalal').then((res) => res.json());
 		const { company, location, avatar_url, bio } = data;
 		setData((prev) => ({ ...prev, company, location, avatar_url, bio }));
 	};
+
 	useEffect(() => {
 		getGithubData();
 	}, []);

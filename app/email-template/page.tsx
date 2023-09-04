@@ -4,26 +4,16 @@ import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import React, { useEffect, useRef } from 'react';
 import { EditorRef, EmailEditorProps } from '@/components/email-template/types';
-// import dynamic from 'next/dynamic';
 
 import ForwardedEmailEditor from '@/components/email-template/email-ui';
 
-// type TEmailEditor = React.ForwardRefExoticComponent<EmailEditorProps & React.RefAttributes<EditorRef> & typeof>;
-// const ForwardedEmailEditor: TEmailEditor = dynamic(
-// 	() => {
-// 		console.log('importing ');
-// 		return import('react-email-editor');
-// 	},
-// 	{ ssr: false }
-// );
-
-export default function Page() {
+const Page = () => {
 	const emailEditorRef = useRef<EditorRef | null>(null);
-	const testRef = useRef<HTMLDivElement | null>(null);
+	// const testRef = useRef<HTMLDivElement | null>(null);
 
-	useEffect(() => {
-		console.log('test ref changed = ', testRef.current);
-	}, [testRef]);
+	// useEffect(() => {
+	// 	console.log('test ref changed = ', testRef.current);
+	// }, [testRef]);
 
 	useEffect(() => {
 		console.log('ref changed = ', emailEditorRef.current);
@@ -52,10 +42,7 @@ export default function Page() {
 	};
 
 	const onReady: EmailEditorProps['onReady'] = (unlayer) => {
-		// const x = unlayer?.init({ id: 'email-editor' });
-		// console.log('new editor', x);
-
-		console.log('editor react-email-editor is ready', emailEditorRef.current);
+		emailEditorRef.current = { editor: unlayer };
 	};
 
 	return (
@@ -64,15 +51,15 @@ export default function Page() {
 				<span>Create Email Template</span>
 				<Button onClick={exportHtml}>Export HTML</Button>
 			</div>
-			<pre>{JSON.stringify(emailEditorRef.current)}</pre>
-			<div id='email-editor' ref={testRef}>
+			{/* <pre>{JSON.stringify(emailEditorRef.current)}</pre> */}
+			{/* <div id='email-editor' ref={testRef}>
 				Name{' '}
-			</div>
+			</div> */}
 			<div className=' grid grid-flow-col md:grid-flow-col grid-cols-1  mb-4'>
-				{ForwardedEmailEditor && (
-					<ForwardedEmailEditor ref={(editorRef) => (emailEditorRef.current = editorRef)} onReady={onReady} />
-				)}
+				{ForwardedEmailEditor && <ForwardedEmailEditor ref={emailEditorRef} onReady={onReady} />}
 			</div>
 		</section>
 	);
-}
+};
+
+export default Page;
