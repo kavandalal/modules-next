@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import FilterDialog from '@/components/image-upload/filter-dialog';
 import { TFilterDialog, TFilterState, TImageObj, defaultFilter, imageObj } from '@/components/image-upload/types.image';
-import { Crop, Pencil, Trash2 } from 'lucide-react';
+import { Crop, MoreVertical, Trash2 } from 'lucide-react';
 import { Popover } from '@/components/ui/popover';
 import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
 
@@ -104,7 +104,7 @@ export default function Page() {
 			/>
 			<div className='flex justify-end mb-4'>
 				{imagesHere.length > 0 && (
-					<Button variant={'destructive'} type='button' className='flex-grow' onClick={() => clearImage()}>
+					<Button variant={'destructive'} type='button' className=' me-3 w-[120px]' onClick={() => clearImage()}>
 						Clear All
 					</Button>
 				)}
@@ -129,20 +129,26 @@ export default function Page() {
 
 							<Popover>
 								<PopoverTrigger className='absolute top-2 right-2 p-2 shadow-md bg-white rounded-lg'>
-									<Pencil />
+									<MoreVertical />
 								</PopoverTrigger>
-								<PopoverContent>
+								<PopoverContent className='duration-500 animate-in'>
 									<div className='flex flex-col'>
-										<Button type='button' onClick={() => editHandle(index)} className='w-[250px]'>
-											<Crop />
+										<Button
+											variant='outline'
+											type='button'
+											onClick={() => editHandle(index)}
+											className='flex justify-between w-[110px] bg-[hsl(var(--background))]'>
+											<Crop color='blue' />
+											<span className='hidden md:block'>Crop </span>
 										</Button>
 
 										<Button
-											variant={'destructive'}
+											variant={'outline'}
 											type='button'
 											onClick={() => clearImage(index)}
-											className='w-[250px]'>
-											<Trash2 />
+											className='flex justify-between w-[110px] bg-[hsl(var(--background))]'>
+											<Trash2 color='red' />
+											<span className='hidden md:block'>Delete </span>
 										</Button>
 									</div>
 								</PopoverContent>
