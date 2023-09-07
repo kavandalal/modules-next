@@ -396,36 +396,29 @@ export default function CropDialog({
 										</Button>
 									</div>
 								</div>
-								<div>
+								<div className='hidden'>
 									<div className='text-center mb-3'>Zoom</div>
 									<div className=' flex justify-center'>
 										<Slider
-											defaultValue={[100]}
+											defaultValue={[40]}
 											onValueChange={(e: number[]) => {
 												setCrop((prev) => {
 													if (!prev) return {} as PercentCrop;
+													console.log({ e, propAspect, prev });
 													const newWidth = Number(e[0]);
 													const newHeight = newWidth / propAspect;
-													const newReturn = {
-														...prev,
-														width: newWidth,
-														height: newHeight,
-													};
-
-													// setCompletedCrop((prev2) => {
-													// 	if (!prev2) return {} as PixelCrop;
-													// 	console.log('************', prev2.width, prev2.height, prev2);
-													// 	const newCompletedW = prev2.width * (newWidth / 100);
-													// 	const newCompletedH = newCompletedW / propAspect;
-													// 	console.log('------', newCompletedW, newCompletedH, prev2);
-													// 	return {
-													// 		...prev2,
-													// 		width: newCompletedW,
-													// 		height: newCompletedH,
-													// 	};
-													// });
-
-													return newReturn;
+													// const newReturn = {
+													// 	...prev,
+													// 	width: newWidth,
+													// 	height: newHeight,
+													// };
+													const newResult = centerAspectCrop({
+														mediaWidth: newWidth,
+														mediaHeight: newHeight,
+														aspect: propAspect,
+													});
+													console.log({ newResult });
+													return newResult;
 												});
 											}}
 											name='logoWidth'
