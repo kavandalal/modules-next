@@ -17,7 +17,6 @@ export type TDropZone = {
 	acceptType?: Array<'jpeg' | 'png' | 'gif'>;
 	multiple?: boolean;
 	className?: string;
-	key?: number;
 };
 export type TImageObj = { display: string; blob: Blob; name: string; size: number; type: string; index?: number };
 export const imageObj: TImageObj = {} as TImageObj;

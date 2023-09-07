@@ -17,7 +17,6 @@ const DropZone = ({
 	acceptType = ['jpeg', 'png'],
 	multiple = false,
 	className,
-
 	...other
 }: TDropZone) => {
 	const [fileState, setFileState] = useState<TImageObj[]>([]);

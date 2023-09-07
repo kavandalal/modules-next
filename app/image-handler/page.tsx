@@ -94,7 +94,6 @@ export default function Page() {
 		<section className=' md:container justify-center items-center flex-row gap-3'>
 			<div className='text-4xl font-bold text-center my-5 text-[hsl(var(--primary))]'>Image Handler</div>
 			<DropZone
-				key={filter.accept.length}
 				multiple={filter.multiple}
 				onClose={onCloseImage}
 				propSize={filter.size}
