@@ -116,7 +116,7 @@ function FilterDialog(props: TFilterDialog) {
 							</Label>
 							<div className='col-span-2 flex flex-col gap-3'>
 								{acceptType?.map((i) => (
-									<div className='flex items-center space-x-2'>
+									<div className='flex items-center space-x-2' key={i}>
 										<Checkbox
 											id={i}
 											checked={stateHere?.accept?.indexOf(i) !== -1}

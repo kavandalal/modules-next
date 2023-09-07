@@ -112,9 +112,9 @@ export default function Page() {
 			<div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 '>
 				{imagesHere.length !== 0 &&
 					imagesHere.map((item, index) => (
-						<div key={index} className='mb-3 border bg-secondary rounded-r-xl shadow-md relative'>
+						<div key={index} className='mb-3 border bg-secondary rounded-xl shadow-md relative overflow-hidden'>
 							<div className='p-3'>
-								<div>
+								<div className='pe-8'>
 									<b>Name</b> {item.name}
 								</div>
 								<div>
@@ -127,7 +127,7 @@ export default function Page() {
 							<Image src={item.display} alt={item.name} width={80} height={50} className='w-full' />
 
 							<Popover>
-								<PopoverTrigger className='absolute top-2 right-2 p-2 shadow-md bg-white rounded-lg'>
+								<PopoverTrigger className='absolute top-2 right-2 p-2 shadow-md bg-[hsl(var(--background))] rounded-lg'>
 									<MoreVertical />
 								</PopoverTrigger>
 								<PopoverContent className='duration-500 animate-in'>
