@@ -41,11 +41,11 @@ const MergeImage = forwardRef<HTMLCanvasElement | null, TMergeImageProps>(functi
 
 			// console.log(imageData);
 			return imageData;
-		} catch (err) {
-			console.log(err);
+		} catch (err: any) {
+			const errorMsg = err?.message || 'Something went wrong';
 			toast({
 				variant: 'destructive',
-				title: 'Something went wrong',
+				title: errorMsg,
 			});
 
 			return false;
@@ -54,10 +54,10 @@ const MergeImage = forwardRef<HTMLCanvasElement | null, TMergeImageProps>(functi
 
 	const doThings = useCallback(async () => {
 		try {
-			// const logoData = await fetchImageFromBackend({ src: logosrc });
-			// const bannerData = await fetchImageFromBackend({ src: bannersrc });
-			const logoData = logosrc;
-			const bannerData = bannersrc;
+			const logoData = await fetchImageFromBackend({ src: logosrc });
+			const bannerData = await fetchImageFromBackend({ src: bannersrc });
+			// const logoData = logosrc;
+			// const bannerData = bannersrc;
 
 			// const refCanvas = externalRef;
 

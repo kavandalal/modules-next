@@ -29,7 +29,11 @@ export default function Page() {
 		(dataArr: TImageObj[]) => {
 			if (!dataArr) return false;
 
-			setImageHere((prev) => [...prev, ...dataArr]);
+			if (filter.multiple) {
+				setImageHere((prev) => [...prev, ...dataArr]);
+			} else {
+				setImageHere(dataArr);
+			}
 
 			if (!filter.multiple && dataArr.length > 0) {
 				setEditImg({ index: 0, ...dataArr[0] });
@@ -62,11 +66,6 @@ export default function Page() {
 			const preview = await blobToPreview(blob);
 			const updateFields = { display: preview, blob, size: blob.size, name };
 
-			// setImageHere((prev) => [
-			// 	...prev.slice(0, changeIndex),
-			// 	{ ...prev[changeIndex], ...updateFields },
-			// 	...prev.slice(changeIndex + 1),
-			// ]);
 			setImageHere((prev) =>
 				prev.map((i, index) => {
 					if (index !== changeIndex) {
@@ -93,8 +92,9 @@ export default function Page() {
 
 	return (
 		<section className=' md:container justify-center items-center flex-row gap-3'>
-			<div className='text-4xl font-bold text-center my-5 text-[hsl(var(--primary))]'>Image Upload</div>
+			<div className='text-4xl font-bold text-center my-5 text-[hsl(var(--primary))]'>Image Handler</div>
 			<DropZone
+				key={filter.accept.length}
 				multiple={filter.multiple}
 				onClose={onCloseImage}
 				propSize={filter.size}
@@ -122,7 +122,7 @@ export default function Page() {
 									<b>Type</b> {item.type}
 								</div>
 								<div>
-									<b>Size</b> {item.size}
+									<b>Size</b> {item.size} ({(item.size / 1024).toFixed(1)} kb)
 								</div>
 							</div>
 							<Image src={item.display} alt={item.name} width={80} height={50} className='w-full' />

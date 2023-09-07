@@ -17,6 +17,7 @@ export type TDropZone = {
 	acceptType?: Array<'jpeg' | 'png' | 'gif'>;
 	multiple?: boolean;
 	className?: string;
+	key?: number;
 };
 export type TImageObj = { display: string; blob: Blob; name: string; size: number; type: string; index?: number };
 export const imageObj: TImageObj = {} as TImageObj;
@@ -40,7 +41,7 @@ export type TcenterAspectCrop = {
 
 // Filter
 export const defaultFilter: TFilterState = { aspect: 16 / 9, size: 1, multiple: true, accept: ['jpeg', 'png'] };
-type AllowedFilterTypes = 'jpeg' | 'png' | 'gif';
+export type AllowedFilterTypes = 'jpeg' | 'png' | 'gif';
 export type TFilterState = { aspect: number; size: number; multiple: boolean; accept: AllowedFilterTypes[] };
 export type TFilterDialog = {
 	filter: TFilterState;

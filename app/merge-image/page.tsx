@@ -20,15 +20,15 @@ type TuserData = {
 };
 
 export default function MergeImageTest() {
-	const [positionLogo, setPositionLogo] = useState({ logoX: 115, logoY: 59, scale: 0.3 });
+	const [positionLogo, setPositionLogo] = useState({ logoX: 87, logoY: 303, scale: 0.3 });
 	const customCanvasRef: React.RefObject<HTMLCanvasElement | null> = useRef(null);
 
 	const [previewImg, setPreviewImg] = useState<string>('');
 	const [userData, setUserData] = useState<TuserData>({
 		logo: 'https://static-00.iconduck.com/assets.00/nextjs-icon-1024x1024-0nli97e5.png',
 
-		banner:
-			'https://images.unsplash.com/photo-1682687982468-4584ff11f88a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+		banner: 'https://c4.wallpaperflare.com/wallpaper/1004/989/293/5c1c8f6d17e3d-wallpaper-preview.jpg',
+		// https://images.unsplash.com/photo-1682687982468-4584ff11f88a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80
 		aspectRatio: '16/9',
 		bannerWidth: 699,
 		bannerHeight: 393.7,
@@ -106,7 +106,6 @@ export default function MergeImageTest() {
 	};
 
 	const handleAspectChange = (e: any) => {
-		console.log(e, typeof e, Number(e));
 		setUserData((prev) => {
 			const bannerWidth = prev?.bannerWidth;
 			const bannerHeight = bannerWidth / eval(e);

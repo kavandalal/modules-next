@@ -1,7 +1,7 @@
 'use client';
 
 import React, { use, useEffect, useState } from 'react';
-import { TFilterDialog, TFilterState } from './types.image';
+import { AllowedFilterTypes, TFilterDialog, TFilterState } from './types.image';
 import { Button } from '@/components/ui/button';
 import {
 	Dialog,
@@ -37,6 +37,23 @@ function FilterDialog(props: TFilterDialog) {
 		setOpen(false);
 	};
 
+	const acceptType: AllowedFilterTypes[] = ['png', 'jpeg'];
+
+	const chnageAccept = (boolVal: boolean, type: AllowedFilterTypes) => {
+		setState((prev) => {
+			const prevState = prev.accept;
+			let newState;
+			if (boolVal) {
+				prevState.push(type);
+				newState = prevState;
+			} else {
+				const removeIndex = prevState.indexOf(type);
+				prevState.splice(removeIndex, 1);
+				newState = prevState;
+			}
+			return { ...prev, accept: [...newState] };
+		});
+	};
 	return (
 		<div>
 			<Dialog open={open} onOpenChange={(data) => setOpen(data)}>
@@ -91,6 +108,26 @@ function FilterDialog(props: TFilterDialog) {
 								checked={stateHere.multiple}
 								onCheckedChange={(e: boolean) => setState((prev) => ({ ...prev, multiple: e }))}
 							/>
+						</div>
+
+						<div className='grid grid-cols-3 gap-4'>
+							<Label htmlFor='mutiple' className='text-right'>
+								File Format
+							</Label>
+							<div className='col-span-2 flex flex-col gap-3'>
+								{acceptType?.map((i) => (
+									<div className='flex items-center space-x-2'>
+										<Checkbox
+											id={i}
+											checked={stateHere?.accept?.indexOf(i) !== -1}
+											onCheckedChange={(e: boolean) => chnageAccept(e, i)}
+										/>
+										<label htmlFor={i} className='text-sm font-medium leading-none '>
+											{i}
+										</label>
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
 					<DialogFooter>

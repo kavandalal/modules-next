@@ -35,9 +35,9 @@ export default function Links({
 		},
 
 		{
-			slug: 'image-upload',
-			url: '/image-upload',
-			title: 'Image Upload',
+			slug: 'image-handler',
+			url: '/image-handler',
+			title: 'Image Handler',
 		},
 		{
 			slug: 'email-template',

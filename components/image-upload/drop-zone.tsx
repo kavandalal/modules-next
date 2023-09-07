@@ -17,12 +17,15 @@ const DropZone = ({
 	acceptType = ['jpeg', 'png'],
 	multiple = false,
 	className,
+
 	...other
 }: TDropZone) => {
 	const [fileState, setFileState] = useState<TImageObj[]>([]);
 	const [acceptTypeState, setAcceptTypeState] = useState<TDropZone['acceptType']>(acceptType);
 
-	useEffect(() => {}, []);
+	useEffect(() => {
+		setAcceptTypeState(acceptType);
+	}, [acceptType]);
 
 	const readBlob = useCallback(
 		(file: File, index: number) =>
@@ -118,7 +121,6 @@ const DropZone = ({
 		},
 		[readBase64, readBlob, multiple, onClose]
 	);
-	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
 	const getCroppedHere = async (preview = '') => {
 		if (!preview) return false;
@@ -166,6 +168,33 @@ const DropZone = ({
 		const returnName = returnArr.join(' or ');
 		return returnName;
 	}, [acceptTypeState]);
+	const dropZoneAccept = useMemo(() => {
+		const returnArr = [];
+		const checkThis = acceptTypeState || [];
+		if (checkThis.indexOf('jpeg') !== -1) {
+			returnArr.push('image/jpeg');
+			returnArr.push('image/jpg');
+		}
+		if (checkThis.indexOf('png') !== -1) {
+			returnArr.push('image/png');
+		}
+		if (checkThis.indexOf('gif') !== -1) {
+			returnArr.push('image/gif');
+		}
+
+		const obj: Record<string, any[]> = {};
+
+		for (const mimeType of returnArr) {
+			obj[mimeType] = [];
+		}
+
+		return obj;
+	}, [acceptTypeState]);
+
+	const { getRootProps, getInputProps, isDragActive } = useDropzone({
+		onDrop,
+		accept: dropZoneAccept,
+	});
 
 	return (
 		<>
