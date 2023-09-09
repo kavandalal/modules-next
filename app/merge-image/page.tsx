@@ -20,14 +20,14 @@ type TuserData = {
 };
 
 export default function MergeImageTest() {
-	const [positionLogo, setPositionLogo] = useState({ logoX: 283, logoY: 47, scale: 0.2 });
+	const [positionLogo, setPositionLogo] = useState({ logoX: 605, logoY: 286, scale: 0.3 });
 	const customCanvasRef: React.RefObject<HTMLCanvasElement | null> = useRef(null);
 
 	const [previewImg, setPreviewImg] = useState<string>('');
 	const [userData, setUserData] = useState<TuserData>({
 		logo: 'https://static-00.iconduck.com/assets.00/nextjs-icon-1024x1024-0nli97e5.png',
 
-		banner: 'https://res.cloudinary.com/dkvftcbih/image/upload/v1694241804/modules-next/spiderman_aw1k60.jpg',
+		banner: 'https://res.cloudinary.com/dkvftcbih/image/upload/v1694242167/modules-next/gwen.jpg',
 		// 'https://images.unsplash.com/photo-1682687982468-4584ff11f88a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
 		aspectRatio: '16/9',
 		bannerWidth: 699,
