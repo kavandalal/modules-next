@@ -22,11 +22,12 @@ const Page = () => {
 	const emailEditorRef = useRef<EditorRef | null>(null);
 
 	useEffect(() => {
-		console.log('ref changed = ', emailEditorRef.current);
+		console.log('initial ref = ', emailEditorRef.current);
 	}, [emailEditorRef]);
 
 	const onReady: EmailEditorProps['onReady'] = (unlayer) => {
 		emailEditorRef.current = { editor: unlayer };
+		console.log('onReady ref = ', emailEditorRef.current);
 	};
 
 	const loadDesign = (json: JSONTemplate) => {
@@ -160,7 +161,7 @@ const Page = () => {
 				</div>
 			</div>
 			<div className=' grid grid-flow-col md:grid-flow-col grid-cols-1  mb-4'>
-				{ForwardedEmailEditor && <ForwardedEmailEditor ref={emailEditorRef} onReady={onReady} />}
+				<ForwardedEmailEditor ref={emailEditorRef} onReady={onReady} />
 			</div>
 		</section>
 	);
