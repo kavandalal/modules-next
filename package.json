@@ -22,8 +22,11 @@
 		"@radix-ui/react-slider": "^1.1.2",
 		"@radix-ui/react-slot": "^1.0.2",
 		"@radix-ui/react-toast": "^1.1.4",
+		"@radix-ui/react-toggle": "^1.0.3",
+		"@radix-ui/react-toggle-group": "^1.0.4",
 		"@types/node": "20.5.6",
 		"@types/react": "18.2.21",
+		"@types/react-beautiful-dnd": "^13.1.6",
 		"@types/react-dom": "18.2.7",
 		"autoprefixer": "10.4.15",
 		"browser-image-compression": "^2.0.2",
@@ -32,10 +35,13 @@
 		"eslint": "8.47.0",
 		"eslint-config-next": "13.4.19",
 		"lucide-react": "^0.269.0",
+		"moment": "^2.29.4",
+		"moment-timezone": "^0.5.43",
 		"next": "13.4.19",
 		"next-themes": "^0.2.1",
 		"postcss": "8.4.28",
 		"react": "18.2.0",
+		"react-beautiful-dnd": "^13.1.1",
 		"react-dom": "18.2.0",
 		"react-dropzone": "^14.2.3",
 		"react-email-editor": "^1.7.9",
@@ -44,6 +50,10 @@
 		"tailwind-merge": "^1.14.0",
 		"tailwindcss": "3.3.3",
 		"tailwindcss-animate": "^1.0.6",
-		"typescript": "5.2.2"
+		"typescript": "5.2.2",
+		"uuid": "^9.0.1"
+	},
+	"devDependencies": {
+		"@types/uuid": "^9.0.6"
 	}
 }

@@ -49,6 +49,11 @@ export default function Links({
 			url: '/merge-image',
 			title: 'Merge Image',
 		},
+		{
+			slug: 'drag-and-drop',
+			url: '/drag-and-drop',
+			title: 'Drag & Drop',
+		},
 	];
 	const [openNav, setOpenNav] = useState(false);
 
